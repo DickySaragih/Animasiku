@@ -2,9 +2,48 @@ import streamlit as st
 import datetime
 import time
 import pandas as pd
+import random
 from io import BytesIO
 
 st.set_page_config(page_title="Aplikasi Motivasi Positif 💡", layout="centered")
+
+# Daftar warna tenang (soft gradients)
+gradients = [
+    ("#fceabb", "#f8b500"),
+    ("#a1c4fd", "#c2e9fb"),
+    ("#fbc2eb", "#a6c1ee"),
+    ("#d4fc79", "#96e6a1"),
+    ("#84fab0", "#8fd3f4"),
+    ("#ffecd2", "#fcb69f"),
+    ("#cfd9df", "#e2ebf0"),
+    ("#d299c2", "#fef9d7")
+]
+warna1, warna2 = random.choice(gradients)
+
+# CSS dinamis
+st.markdown(f"""
+<style>
+body {{ background: linear-gradient(135deg, {warna1}, {warna2}); }}
+.title-box {{
+    background: white; padding: 20px; border-radius: 12px;
+    text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}}
+.motivation-box {{
+    background: #fff9c4; padding: 20px; margin-top: 20px;
+    border-radius: 12px; text-align: center;
+}}
+.center-button {{ display: flex; justify-content: center; }}
+.stButton>button {{
+    background-color: #003b46 !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 10px 20px;
+}}
+</style>
+""", unsafe_allow_html=True)
+
+# 🔊 Gunakan musik dari GitHub (RAW URL)
+st.audio("https://raw.githubusercontent.com/DickySaragih/Animasiku/main/chillsong.mp3", format="audio/mp3")
 
 # Fungsi zodiak
 def tentukan_zodiak(tgl):
@@ -37,27 +76,7 @@ def motivasi(z, nama, hobi):
     }
     return m.get(z, f"{nama}, teruslah berjuang dalam {hobi}!")
 
-# CSS
-st.markdown("""
-<style>
-body { background: linear-gradient(135deg, #38ef7d, #11998e); }
-.title-box {
-    background: white; padding: 20px; border-radius: 12px;
-    text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-.motivation-box {
-    background: #fff9c4; padding: 20px; margin-top: 20px;
-    border-radius: 12px; text-align: center;
-}
-.center-button { display: flex; justify-content: center; }
-.stButton>button { background-color: #003b46 !important; color: white !important; }
-</style>
-""", unsafe_allow_html=True)
-
-# 🔊 Gunakan musik dari GitHub (RAW URL)
-st.audio("https://raw.githubusercontent.com/DickySaragih/Animasiku/main/chillsong.mp3", format="audio/mp3")
-
-# State inisialisasi
+# State
 if 'data' not in st.session_state:
     st.session_state.data = []
 if 'is_logged_in' not in st.session_state:
