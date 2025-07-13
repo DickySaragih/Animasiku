@@ -54,7 +54,8 @@ body { background: linear-gradient(135deg, #38ef7d, #11998e); }
 </style>
 """, unsafe_allow_html=True)
 
-st.audio("https://www.soundjay.com/human/sounds/applause-01.mp3", format="audio/mp3", start_time=0)
+st.audio("https://raw.githubusercontent.com/username/repo/main/chillsong.mp3")
+
 
 # 🔧 Inisialisasi State
 if 'data' not in st.session_state:
