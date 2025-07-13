@@ -54,7 +54,7 @@ body { background: linear-gradient(135deg, #38ef7d, #11998e); }
 </style>
 """, unsafe_allow_html=True)
 
-st.audio("https://raw.githubusercontent.com/username/repo/main/chillsong.mp3")
+st.audio("https://github.com/DickySaragih/Animasiku/blob/main/chillsong.mp3")
 
 
 # 🔧 Inisialisasi State
