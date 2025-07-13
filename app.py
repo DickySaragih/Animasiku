@@ -2,9 +2,11 @@ import streamlit as st
 import datetime
 import time
 import pandas as pd
+from io import BytesIO
 
 st.set_page_config(page_title="Aplikasi Motivasi Positif 💡", layout="centered")
 
+# 🎯 Fungsi Zodiak
 def tentukan_zodiak(tgl):
     z = [
         ("Capricorn", (12, 22), (1, 19)), ("Aquarius", (1, 20), (2, 18)), ("Pisces", (2, 19), (3, 20)),
@@ -17,6 +19,7 @@ def tentukan_zodiak(tgl):
             return nama
     return "Capricorn"
 
+# 💬 Motivasi Berdasarkan Zodiak
 def motivasi(z, nama, hobi):
     m = {
         "Aries": f"{nama}, Aries penuh energi! Teruslah aktif dalam {hobi}!",
@@ -34,7 +37,7 @@ def motivasi(z, nama, hobi):
     }
     return m.get(z, f"{nama}, teruslah berjuang dalam {hobi}!")
 
-# CSS & Sound
+# 🎨 CSS Custom & Audio
 st.markdown("""
 <style>
 body { background: linear-gradient(135deg, #38ef7d, #11998e); }
@@ -53,6 +56,7 @@ body { background: linear-gradient(135deg, #38ef7d, #11998e); }
 
 st.audio("https://www.soundjay.com/human/sounds/applause-01.mp3", format="audio/mp3", start_time=0)
 
+# 🔧 Inisialisasi State
 if 'data' not in st.session_state:
     st.session_state.data = []
 if 'is_logged_in' not in st.session_state:
@@ -60,7 +64,7 @@ if 'is_logged_in' not in st.session_state:
 if 'user' not in st.session_state:
     st.session_state.user = None
 
-# Sidebar riwayat
+# 📋 Sidebar Riwayat
 st.sidebar.title("📜 Riwayat")
 if st.session_state.data:
     daftar = [f"{i+1}. {d['nama']}" for i, d in enumerate(st.session_state.data)]
@@ -74,8 +78,10 @@ if st.session_state.data:
             st.session_state.data.pop(idx)
             st.rerun()
 
+# 🏷️ Judul
 st.markdown("<div class='title-box'><h1>💡 Aplikasi Motivasi Positif</h1></div>", unsafe_allow_html=True)
 
+# 🧾 Form Input
 if not st.session_state.is_logged_in:
     st.subheader("📝 Form Pendaftaran")
     nama = st.text_input("Nama")
@@ -109,8 +115,27 @@ else:
         st.session_state.user = None
         st.rerun()
 
-# Export data
+# 📤 Download Data
 if st.session_state.data:
     df = pd.DataFrame(st.session_state.data)
-    st.download_button("⬇️ Unduh CSV", data=df.to_csv(index=False), file_name="riwayat.csv", mime="text/csv")
-    st.download_button("⬇️ Unduh Excel", data=df.to_excel(index=False), file_name="riwayat.xlsx", mime="application/vnd.ms-excel")
+    
+    # CSV
+    st.download_button(
+        "⬇️ Unduh CSV",
+        data=df.to_csv(index=False),
+        file_name="riwayat.csv",
+        mime="text/csv"
+    )
+
+    # Excel via BytesIO
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Riwayat')
+    output.seek(0)
+
+    st.download_button(
+        label="⬇️ Unduh Excel",
+        data=output,
+        file_name="riwayat.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
