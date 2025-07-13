@@ -6,20 +6,20 @@ from io import BytesIO
 
 st.set_page_config(page_title="Aplikasi Motivasi Positif 💡", layout="centered")
 
-# 🎯 Fungsi Zodiak
+# Fungsi zodiak
 def tentukan_zodiak(tgl):
-    z = [
+    zodiaks = [
         ("Capricorn", (12, 22), (1, 19)), ("Aquarius", (1, 20), (2, 18)), ("Pisces", (2, 19), (3, 20)),
         ("Aries", (3, 21), (4, 19)), ("Taurus", (4, 20), (5, 20)), ("Gemini", (5, 21), (6, 20)),
         ("Cancer", (6, 21), (7, 22)), ("Leo", (7, 23), (8, 22)), ("Virgo", (8, 23), (9, 22)),
         ("Libra", (9, 23), (10, 22)), ("Scorpio", (10, 23), (11, 21)), ("Sagittarius", (11, 22), (12, 21)),
     ]
-    for nama, (bln1, tgl1), (bln2, tgl2) in z:
-        if (tgl.month == bln1 and tgl.day >= tgl1) or (tgl.month == bln2 and tgl.day <= tgl2):
+    for nama, (b1, d1), (b2, d2) in zodiaks:
+        if (tgl.month == b1 and tgl.day >= d1) or (tgl.month == b2 and tgl.day <= d2):
             return nama
     return "Capricorn"
 
-# 💬 Motivasi Berdasarkan Zodiak
+# Motivasi berdasarkan zodiak
 def motivasi(z, nama, hobi):
     m = {
         "Aries": f"{nama}, Aries penuh energi! Teruslah aktif dalam {hobi}!",
@@ -37,7 +37,7 @@ def motivasi(z, nama, hobi):
     }
     return m.get(z, f"{nama}, teruslah berjuang dalam {hobi}!")
 
-# 🎨 CSS Custom & Audio
+# CSS
 st.markdown("""
 <style>
 body { background: linear-gradient(135deg, #38ef7d, #11998e); }
@@ -54,10 +54,10 @@ body { background: linear-gradient(135deg, #38ef7d, #11998e); }
 </style>
 """, unsafe_allow_html=True)
 
-st.audio("https://raw.github.com/DickySaragih/Animasiku/blob/main/chillsong.mp3")
+# 🔊 Gunakan musik dari GitHub (RAW URL)
+st.audio("https://raw.githubusercontent.com/DickySaragih/Animasiku/main/chillsong.mp3", format="audio/mp3")
 
-
-# 🔧 Inisialisasi State
+# State inisialisasi
 if 'data' not in st.session_state:
     st.session_state.data = []
 if 'is_logged_in' not in st.session_state:
@@ -65,7 +65,7 @@ if 'is_logged_in' not in st.session_state:
 if 'user' not in st.session_state:
     st.session_state.user = None
 
-# 📋 Sidebar Riwayat
+# Sidebar riwayat
 st.sidebar.title("📜 Riwayat")
 if st.session_state.data:
     daftar = [f"{i+1}. {d['nama']}" for i, d in enumerate(st.session_state.data)]
@@ -79,10 +79,10 @@ if st.session_state.data:
             st.session_state.data.pop(idx)
             st.rerun()
 
-# 🏷️ Judul
+# Judul
 st.markdown("<div class='title-box'><h1>💡 Aplikasi Motivasi Positif</h1></div>", unsafe_allow_html=True)
 
-# 🧾 Form Input
+# Form pendaftaran
 if not st.session_state.is_logged_in:
     st.subheader("📝 Form Pendaftaran")
     nama = st.text_input("Nama")
@@ -116,24 +116,15 @@ else:
         st.session_state.user = None
         st.rerun()
 
-# 📤 Download Data
+# Unduh data
 if st.session_state.data:
     df = pd.DataFrame(st.session_state.data)
-    
-    # CSV
-    st.download_button(
-        "⬇️ Unduh CSV",
-        data=df.to_csv(index=False),
-        file_name="riwayat.csv",
-        mime="text/csv"
-    )
+    st.download_button("⬇️ Unduh CSV", data=df.to_csv(index=False), file_name="riwayat.csv", mime="text/csv")
 
-    # Excel via BytesIO
     output = BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='Riwayat')
     output.seek(0)
-
     st.download_button(
         label="⬇️ Unduh Excel",
         data=output,
